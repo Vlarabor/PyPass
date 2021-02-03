@@ -1,9 +1,8 @@
-import hashlib
 from typing import Tuple
 
-from exceptions import IllegalParameterException, NoComparisonAuthHash
-from utils import convert_to_bytes, convert_to_int, convert_to_string, get_group_params, get_random_number, hash_args,\
-    GroupBitSize
+from src.authentication.exceptions import IllegalParameterException, NoComparisonAuthHash
+from src.authentication.utils import convert_to_bytes, convert_to_int, convert_to_string, get_group_params, \
+    get_random_number, hash_args, GroupBitSize, HashFunc, get_hash_func
 
 
 class ServerSession:
@@ -26,8 +25,10 @@ class ServerSession:
         The verifier.
     bytes_pk_a : bytes
         The public key A from the client.
-    group_param_bytes : GroupBitSize
+    group_param_size : GroupBitSize
         The size of the prime N in bits.
+    hash_func : HashFunc
+        The hash function used by the server.
 
     Attributes
     ----------
@@ -46,14 +47,15 @@ class ServerSession:
 
     .. [2] https://en.wikipedia.org/wiki/Secure_Remote_Password_protocol
     """
+
     def __init__(self, username: str or bytes, salt: bytes, verifier: bytes, bytes_pk_a: bytes,
-                 group_param_bytes: GroupBitSize = GroupBitSize.BIT_2048):
+                 group_param_size: GroupBitSize = GroupBitSize.BIT_2048, hash_func: HashFunc = HashFunc.SHA256):
         if not username:
             raise IOError("A Username must be specified.")
         self._username = convert_to_string(username) if type(username) is bytes else username
-        self._n, self._g = get_group_params(group_param_bytes)
+        self._n, self._g = get_group_params(group_param_size)
         self._salt = convert_to_int(salt)
-        self.hash_func = hashlib.sha256
+        self.hash_func = get_hash_func(hash_func)
         self._verifier = convert_to_int(verifier)
         self._pk_a = convert_to_int(bytes_pk_a)
 

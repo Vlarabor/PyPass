@@ -1,21 +1,19 @@
-import hashlib
-
 from src.authentication.client_session import ClientSession
 from src.authentication.server_session import ServerSession
 from src.authentication.user_creation import generate_salt_and_verifier
-from src.authentication.utils import GroupBitSize, get_group_params
+from src.authentication.utils import GroupBitSize, get_group_params, HashFunc
 
 if __name__ == "__main__":
     # Set size of residue class ring integer
-    group_params_size = GroupBitSize.BIT_4096
-    N, g = get_group_params(group_params_size)
+    group_param_size = GroupBitSize.BIT_4096
+    N, g = get_group_params(group_param_size)
     # Create a dummy user (this is done by the Client on user creation)
-    s, v = generate_salt_and_verifier(hashlib.sha256, "TestUser", "SecureTestPassword123", N, g)
+    s, v = generate_salt_and_verifier(HashFunc.SHA256, "TestUser", "SecureTestPassword123", N, g)
 
     # Create client session that wants to authenticate themselves
-    client = ClientSession("TestUser", "SecureTestPassword123", group_param_bytes=group_params_size)
+    client = ClientSession("TestUser", "SecureTestPassword123", group_param_size=group_param_size)
     # Create a malicious client session that wants to authenticate themselves as a genuine client
-    m_client = ClientSession("TestUser", "JustGuessThePassword123", group_param_bytes=group_params_size)
+    m_client = ClientSession("TestUser", "JustGuessThePassword123", group_param_size=group_param_size)
 
     # Start authentication of the genuine client
     # Client -> Server: Username, random A from the residue class ring
@@ -23,8 +21,8 @@ if __name__ == "__main__":
     m_username, m_A = m_client.start_auth_process()
 
     # Server session that verifies the client (s, v would normally be retrieved from a database)
-    server = ServerSession(username, s, v, A, group_param_bytes=group_params_size)
-    m_server = ServerSession(m_username, s, v, m_A, group_param_bytes=group_params_size)
+    server = ServerSession(username, s, v, A, group_param_size=group_param_size)
+    m_server = ServerSession(m_username, s, v, m_A, group_param_size=group_param_size)
 
     # Server -> Client: Random Challenge B with saved salt s
     salt, B = server.send_challenge()

@@ -1,3 +1,4 @@
+import hashlib
 import os
 import sys
 from enum import Enum
@@ -159,6 +160,21 @@ FC026E479558E4475677E9AA9E3050E2765694DFC81F56E880B96E71\
 }
 
 
+class HashFunc(Enum):
+    SHA224 = hashlib.sha224
+    SHA256 = hashlib.sha256
+    SHA384 = hashlib.sha384
+    SHA512 = hashlib.sha512
+
+
+HASH_FUNCTIONS = {
+    HashFunc.SHA224: hashlib.sha224,
+    HashFunc.SHA256: hashlib.sha256,
+    HashFunc.SHA384: hashlib.sha384,
+    HashFunc.SHA512: hashlib.sha512
+}
+
+
 def convert_to_bytes(v: int or str) -> bytes:
     """
     Converts the given value into bytes representation.
@@ -220,13 +236,13 @@ def convert_to_string(b: bytes) -> str:
     return b.decode("utf-8")
 
 
-def get_group_params(group_bytes_size: GroupBitSize) -> Tuple[int, int]:
+def get_group_params(group_param_size: GroupBitSize) -> Tuple[int, int]:
     """
     Get the group parameters N and g of the given size.
 
     Parameters
     ----------
-    group_bytes_size : GroupBitSize
+    group_param_size : GroupBitSize
         The size of the group parameters.
 
     Returns
@@ -236,8 +252,24 @@ def get_group_params(group_bytes_size: GroupBitSize) -> Tuple[int, int]:
     g : int
         The generator of the residual class ring.
     """
-    n, g = SRP_GROUP_PARAMETERS[group_bytes_size]
+    n, g = SRP_GROUP_PARAMETERS[group_param_size]
     return int(n, 16), int(g, 16)
+
+
+def get_hash_func(hash_func: HashFunc):
+    """
+    Get the specified hash function.
+
+    Parameters
+    ----------
+    hash_func: HashFunc
+        The hash function.
+
+    Returns
+    -------
+        The hash function.
+    """
+    return HASH_FUNCTIONS[hash_func]
 
 
 def get_random_number(n_bytes: int) -> int:
