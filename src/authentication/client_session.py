@@ -1,9 +1,9 @@
 import hashlib
 from typing import Tuple
 
-from .exceptions import IllegalParameterException, NoComparisonAuthHash
-from .utils import convert_to_bytes, convert_to_int, get_group_params, get_random_number, hash_args, \
-    GroupByteSize, calculate_x
+from exceptions import IllegalParameterException, NoComparisonAuthHash
+from utils import convert_to_bytes, convert_to_int, get_group_params, get_random_number, hash_args, GroupBitSize, \
+    calculate_x
 
 
 class ClientSession:
@@ -22,8 +22,8 @@ class ClientSession:
         The client's username.
     password : str
         The client's password in plain text.
-    group_param_bytes : GroupByteSize
-        The size of the prime N in bytes.
+    group_param_bytes : GroupBitSize
+        The size of the prime N in bits.
 
     Attributes
     ----------
@@ -43,7 +43,7 @@ class ClientSession:
     .. [2] https://en.wikipedia.org/wiki/Secure_Remote_Password_protocol
     """
 
-    def __init__(self, username: str, password: str, group_param_bytes: GroupByteSize = GroupByteSize.BIT_2048):
+    def __init__(self, username: str, password: str, group_param_bytes: GroupBitSize = GroupBitSize.BIT_2048):
         if not username:
             raise IOError("A Username must be specified.")
         self._username = username

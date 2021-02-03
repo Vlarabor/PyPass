@@ -3,11 +3,11 @@ import hashlib
 from src.authentication.client_session import ClientSession
 from src.authentication.server_session import ServerSession
 from src.authentication.user_creation import generate_salt_and_verifier
-from src.authentication.utils import GroupByteSize, get_group_params
+from src.authentication.utils import GroupBitSize, get_group_params
 
 if __name__ == "__main__":
     # Set size of residue class ring integer
-    group_params_size = GroupByteSize.BIT_4096
+    group_params_size = GroupBitSize.BIT_4096
     N, g = get_group_params(group_params_size)
     # Create a dummy user (this is done by the Client on user creation)
     s, v = generate_salt_and_verifier(hashlib.sha256, "TestUser", "SecureTestPassword123", N, g)
