@@ -23,7 +23,7 @@ server can authenticate that the client knows the password and the client can au
 password (however, not the password itself). This provides additional security against phishing attacks.
 
 Exact implementation details about the protocol can be found [here](https://en.wikipedia.org/wiki/Secure_Remote_Password_protocol)
-or in this [repository](../src/authentication/). This [test](../src/authentication/test.py) allows running a quick example protocol interaction
+or in this [repository](./src/authentication/). This [test](./src/authentication/test.py) allows running a quick example protocol interaction
 between a server and a genuine client as well as a server and a malicious client trying to authenticate themselves as user.
 
 ## Encryption
