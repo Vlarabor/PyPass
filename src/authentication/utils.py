@@ -256,7 +256,7 @@ def get_group_params(group_param_size: GroupBitSize) -> Tuple[int, int]:
     return int(n, 16), int(g, 16)
 
 
-def get_hash_func(hash_func: HashFunc):
+def get_hash_func(hash_func: HashFunc) -> callable:
     """
     Get the specified hash function.
 
@@ -267,6 +267,7 @@ def get_hash_func(hash_func: HashFunc):
 
     Returns
     -------
+    callable:
         The hash function.
     """
     return HASH_FUNCTIONS[hash_func]
@@ -289,13 +290,13 @@ def get_random_number(n_bytes: int) -> int:
     return convert_to_int(os.urandom(n_bytes))
 
 
-def calculate_x(hash_func, username: str, password: str, salt: int) -> int:
+def calculate_x(hash_func: callable, username: str, password: str, salt: int) -> int:
     """
     Calculates the secret x.
 
     Parameters
     ----------
-    hash_func
+    hash_func: callable
         The hash function.
     username : str
         The username.
@@ -316,15 +317,15 @@ def calculate_x(hash_func, username: str, password: str, salt: int) -> int:
     return hash_args(hash_func, salt, hash_args(hash_func, username, ":", password))
 
 
-def hash_args(hash_func, *args) -> int:
+def hash_args(hash_func: callable, *args: int or str or bytes) -> int:
     """
     Hash the given arguments with the given hash function.
 
     Parameters
     ----------
-    hash_func
+    hash_func: callable
         The hash function
-    args
+    args: int or str or bytes
         Arguments to hash
 
     Returns

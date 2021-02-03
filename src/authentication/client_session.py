@@ -28,7 +28,7 @@ class ClientSession:
 
     Attributes
     ----------
-    hash_func
+    hash_func : callable
         The hash function used by the client.
 
     Raises
