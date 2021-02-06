@@ -31,7 +31,7 @@ The vault storing the account data of a client is encrypted by a symmetric encry
 the cipher is derived by the password-based key derivation function [scrypt](https://tools.ietf.org/html/rfc7914). Thus, the symmetric encryption
 key can only derived with the knowledge of the master password.
 
-The account information in the vault is encrypted and decrypted by the client using the [ChaCha20 and Poly1305 Protocols](https://tools.ietf.org/html/rfc7539#section-3).
+The account information in the vault is encrypted and decrypted by the client using the [ChaCha20 and Poly1305 Protocols](https://tools.ietf.org/html/rfc8439).
 The stream cipher ChaCha20 and the authenticator Poly1305 are used in combination to provide Authenticated Encryption with Associated Data (AEAD).
 Since the master password is never shared during authentication, only the client is able to decrypt their account information from the vault. Using the authentication tag
 of the Poly1305 algorithm, the client can verify that the server sent the correct vault data. After decryption the client can then use the account data to login into the
